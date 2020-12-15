@@ -1,6 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="styles.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>PD5 - Patient Database 5</title>
@@ -29,6 +30,8 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   firebase.analytics();
+  const db = firebase.firestore();
+  db.settings({ timestampsInSnapshots: true });
 </script>
 
     <script src="app.js" defer></script>
@@ -37,19 +40,30 @@
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
             integrity="sha512-/seDHxVfh1NvFUscAj8GsHQVZJvr2jjAoYsNL7As2FCaFHUHYIarl3sRCvVlFgyouVNiRgHIebyLKjpgd1SLDw=="
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 
 </head>
   <body>
+
+    <!--Welcome banner-->
     <h1>PD5 - Patient Database 5</h1>
 
+    <!--Logout section -->
     <section id="whenSignedOut">
-        <button id="signInBtn" class="btn btn-primary">Sign in with Google</button>
+            <button id="signInBtn">Sign in with Google</button>
     </section>
 
+    <!--Login section -->
     <section id="whenSignedIn" hidden="true">
         <div id="userDetails"></div>
-        <button id="signOutBtn" class="btn btn-primary">Sign Out</button>
+        <div class="content">
+            <form id="addPatientForm"></form>
+            <br>
+            <ul id="patientList"></ul>
+        </div>
+        <br>
+        <button id="signOutBtn">Sign Out</button>
     </section>
 
   </body>
