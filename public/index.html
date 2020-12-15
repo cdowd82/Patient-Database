@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PD5 - Patient Database 5</title>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-firestore.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyBF4ihOmPeBepeHubscMtKqwFIguN_Ss-M",
+    authDomain: "proj4-dba2a.firebaseapp.com",
+    projectId: "proj4-dba2a",
+    storageBucket: "proj4-dba2a.appspot.com",
+    messagingSenderId: "303842974455",
+    appId: "1:303842974455:web:f9a1705946a2d8827691f2",
+    measurementId: "G-MSZRR4SLEN"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+    <script src="app.js" defer></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
+            integrity="sha512-/seDHxVfh1NvFUscAj8GsHQVZJvr2jjAoYsNL7As2FCaFHUHYIarl3sRCvVlFgyouVNiRgHIebyLKjpgd1SLDw=="
+            crossorigin="anonymous"></script>
+
+</head>
+  <body>
+    <h1>PD5 - Patient Database 5</h1>
+
+    <section id="whenSignedOut">
+        <button id="signInBtn" class="btn btn-primary">Sign in with Google</button>
+    </section>
+
+    <section id="whenSignedIn" hidden="true">
+        <div id="userDetails"></div>
+        <button id="signOutBtn" class="btn btn-primary">Sign Out</button>
+    </section>
+
+  </body>
+</html>
