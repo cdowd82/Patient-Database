@@ -35,42 +35,57 @@ auth.onAuthStateChanged(user => {
 
 /**** Database functionality ***/
 
-// NOTE - db variable defined in index file
+// NOTE - db variable defined in public/index.html file
 const patients = document.querySelector('#patientList');
+const form = document.querySelector('#addPatientForm');
 
 /** 
- * @brief - creates element and render patient
+ * @brief - creates element and renders patient to browser
  * @params - doc
- * @ret - 
+ * @ret - none
 */
 function renderPatient(doc) {
     // create variables from tags
     let li = document.createElement('li');
-    let firstName = document.createElement('span');
-    let middleNames = document.createElement('span');
-    let lastName = document.createElement('span');
+    let name = document.createElement('span');
     let age = document.createElement('span');
+    let cross = document.createElement('div');
 
     // identify document by id tage in db
     li.setAttribute('data-id', doc.id);
-    firstName.textContent = doc.data().firstName;
-    middleNames.textContent = doc.data().middleNames;
-    lastName.textContent = doc.data().lastName;
-    age.textContent = doc.data().age
+    name.textContent = doc.data().name;
+    age.textContent = doc.data().age;
+    cross.textContent = 'x';
 
     // create list of from doc data
-    li.appendChild(firstName);
-    li.appendChild(middleNames);
-    li.appendChild(lastName);
+    li.appendChild(name);
     li.appendChild(age);
+    li.appendChild(cross);
     patients.appendChild(li);
+
+    // deleting patient
+    cross.addEventListener('click', (e) => {
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        db.collection('Patients').doc(id).delete();
+    })
 }
 
-
-
-// display patients in console
-db.collection('Patients').get().then((snapshot) => {
+// display patients in bowser
+db.collection('Patients').orderBy('name').get().then((snapshot) => {
     snapshot.docs.forEach(doc => {
         renderPatient(doc);
     })
+})
+
+// save patient
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    db.collection('Patients').add({ 
+        name: form.name.value,
+        age: form.age.value
+     });
+     // reset form fields
+     form.name.value = '';
+     form.age.value = '';
 })

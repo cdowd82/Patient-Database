@@ -35,9 +35,6 @@
 </script>
 
     <script src="app.js" defer></script>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
             integrity="sha512-/seDHxVfh1NvFUscAj8GsHQVZJvr2jjAoYsNL7As2FCaFHUHYIarl3sRCvVlFgyouVNiRgHIebyLKjpgd1SLDw=="
             crossorigin="anonymous">
@@ -50,21 +47,25 @@
     <h1>PD5 - Patient Database 5</h1>
 
     <!--Logout section -->
-    <section id="whenSignedOut">
+      <section id="whenSignedOut">
             <button id="signInBtn">Sign in with Google</button>
-    </section>
+      </section>
 
     <!--Login section -->
-    <section id="whenSignedIn" hidden="true">
-        <div id="userDetails"></div>
-        <div class="content">
-            <form id="addPatientForm"></form>
-            <br>
-            <ul id="patientList"></ul>
-        </div>
-        <br>
-        <button id="signOutBtn">Sign Out</button>
-    </section>
+      <section id="whenSignedIn" hidden="true">
+           <div id="userDetails"></div>
+           <div class="content">
+               <form id="addPatientForm">
+                   <input type="text" name="name" placeholder="Patient Name">
+                   <input type="text" name="age" placeholder="Patient Age">
+                   <button>Add Patient</button>
+               </form>
+               <br>
+               <ul id="patientList"></ul>
+          </div>
+          <br>
+                <button id="signOutBtn">Sign Out</button>
+      </section>
 
   </body>
 </html>
