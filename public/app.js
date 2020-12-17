@@ -1,4 +1,4 @@
-console.log(firebase)
+console.log(firebase);
 
 /**** Login in / out functionality ***/
 
@@ -40,7 +40,7 @@ const patients = document.querySelector('#patientList');
 const form = document.querySelector('#addPatientForm');
 
 /** 
- * @brief - creates element and renders patient to browser
+ * @brief - creates element and renders patient to DOM
  * @params - doc
  * @ret - none
 */
@@ -55,7 +55,7 @@ function renderPatient(doc) {
     li.setAttribute('data-id', doc.id);
     name.textContent = doc.data().name;
     age.textContent = doc.data().age;
-    cross.textContent = 'x';
+    cross.textContent = 'delete patient';
 
     // create list of from doc data
     li.appendChild(name);
@@ -71,12 +71,18 @@ function renderPatient(doc) {
     })
 }
 
-// display patients in bowser
-db.collection('Patients').orderBy('name').get().then((snapshot) => {
-    snapshot.docs.forEach(doc => {
-        renderPatient(doc);
+// realtime listener 
+db.collection('Patients').orderBy('name').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        if (change.type == 'added') {
+            renderPatient(change.doc);
+        } else if (change.type == 'removed') {
+            let li = patientList.querySelector('[data-id=' + change.doc.id + ']');
+            patientList.removeChild(li);
+        }
     })
-})
+});
 
 // save patient
 form.addEventListener('submit', (e) => {
@@ -88,4 +94,4 @@ form.addEventListener('submit', (e) => {
      // reset form fields
      form.name.value = '';
      form.age.value = '';
-})
+});
