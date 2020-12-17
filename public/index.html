@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="styles.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PD5 - Patient Database 5</title>
+    <title>PD6 - Patient Database 6</title>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
@@ -19,13 +19,13 @@
   // Your web app's Firebase configuration
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
   var firebaseConfig = {
-    apiKey: "AIzaSyBF4ihOmPeBepeHubscMtKqwFIguN_Ss-M",
-    authDomain: "proj4-dba2a.firebaseapp.com",
-    projectId: "proj4-dba2a",
-    storageBucket: "proj4-dba2a.appspot.com",
-    messagingSenderId: "303842974455",
-    appId: "1:303842974455:web:f9a1705946a2d8827691f2",
-    measurementId: "G-MSZRR4SLEN"
+    apiKey: "AIzaSyBQB8qjV8c7gyg5SCI6q_V0n-e1tawNdgQ",
+    authDomain: "proj6-df4cb.firebaseapp.com",
+    projectId: "proj6-df4cb",
+    storageBucket: "proj6-df4cb.appspot.com",
+    messagingSenderId: "568530125275",
+    appId: "1:568530125275:web:7cc55a1a3bf3921b4727fe",
+    measurementId: "G-WKTCBK0PQ6"
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
@@ -43,15 +43,146 @@
 </head>
   <body>
 
-    <!--Welcome banner-->
-    <h1>PD5 - Patient Database 5</h1>
-
-    <!--Logout section -->
+    <!--Logout section-->
       <section id="whenSignedOut">
-            <button id="signInBtn">Sign in with Google</button>
+          <!--Landing Banner-->
+          <h1>PD6 - Patient Database 6</h1>
+          <button id="signInBtn">Sign in with Google</button>
       </section>
 
-    <!--Login section -->
+      <section id="whenSignedIn" hidden="true">
+          <h1>PD6 - Patient Database 6</h1>
+          <div id="userDetails"></div>
+          <button onclick="enterNewPatientSect()">New Patient</button>
+          <button onclick="enterSearchDBSect()">Search Patient Database</button>
+          <button onclick="enterUpdatePatientSect()">Update Patient</button>
+          <br></br>
+          <button id="signOutBtn">Sign Out</button>
+      </section>
+
+      <section id="newPatientSect" hidden="true">
+        <h2>New Patient</h2>
+        <button onclick="enterPreIndexSect()">Pre-Index</button>
+        <button onclick="enterIndexSect()">Index</button>
+        <button onclick="enterSevenDaySect()">7 Day</button>
+        <button onclick="enterThirtyDaySect()">30 Day</button>
+        <button onclick="enterOneYearSect()">1 Year</button>
+        <button onclick="enterUpdatePatientSect()">Update Patient</button>
+        <button onclick="backFromNewPatientSect()">Back</button>
+      </section>
+
+      <section id="preIndexSect" hidden="true">
+          <h2>Pre-Index</h2>
+          <form id="addPreIndexForm">
+            <input type="text" name="name" placeholder="Name"><br>
+            <input type="text" name="age" placeholder="Age"><br>
+            <input type="text" name="bloodPressure" placeholder="Blood Pressure"><br>
+            <input type="text" name="lvedp" placeholder="LVEDP"><br>
+            <input type="text" name="hxStroke" placeholder="Hx Stroke"><br>
+            <input type="text" name="hf" placeholder="HF"><br>
+            <input type="text" name="mitralReg" placeholder="Mitral Regulation"><br>
+            <button>Add Pre-index</button>
+        </form>
+          <br>
+          <button onclick="backFromPreIndex()">Back</button>
+      </section>
+
+      <section id="indexSect" hidden="true">
+        <h2>Index</h2>
+        <form id="addPreIndexForm">
+          <input type="text" name="minOfProcedure" placeholder="Minutes of Procedure"><br>
+          <input type="text" name="pci" placeholder="+/- PCI"><br>
+          <input type="text" name="xRayDose" placeholder="X-Ray Dose (ms)"><br>
+          <input type="text" name="contrastVol" placeholder="Contrast Volume (mL)"><br>
+          <input type="text" name="lvedp" placeholder="LVEDP"><br>
+          <input type="text" name="regulatedVol" placeholder="Regulated Volume"><br>
+          <input type="text" name="procedureBleeding" placeholder="Procedure Bleeding"><br>
+          <input type="text" name="devFailure" placeholder="Device Failure"><br>
+          <input type="text" name="valveAndSize" placeholder="Valve and Size"><br>
+          <button>Add Index</button>
+      </form>
+        <br>
+        <button onclick="backFromIndex()">Back</button>
+      </section>
+
+      <section id="sevenDaySect" hidden="true">
+        <h2>7 Day</h2>
+        <form id="addPreIndexForm">
+          <input type="text" name="deviceFailure" placeholder="Device Failure"><br>
+          <input type="text" name="lvedp" placeholder="LVEDP"><br>
+          <input type="text" name="hf" placeholder="HF"><br>
+          <h5>MACCE -</h5><br>
+              <input type="text" name="bleeding" placeholder="Bleeding"><br>
+              <input type="text" name="stole" placeholder="Stole"><br>
+              <input type="text" name="cardClear" placeholder="Cardiac Cleared"><br>
+              <input type="text" name="allCaseDeath" placeholder="All Case Death"><br>
+          <button>Add 7 Day</button>
+        </form>
+        <br>
+        <button onclick="backFromSevenDaySect()">Back</button>
+      </section>
+
+      <section id="thirtyDaySect" hidden="true">
+        <h2>30 Day</h2>
+        <form id="addPreIndexForm">
+          <input type="text" name="devFailure" placeholder="Device Failure"><br>
+          <input type="text" name="lvedp" placeholder="LVEDP"><br>
+          <input type="text" name="hf" placeholder="HF"><br>
+          <h5>MACCE</h5><br>
+          <input type="text" name="bleeding" placeholder="Bleeding"><br>
+          <input type="text" name="stole" placeholder="Stole"><br>
+          <input type="text" name="cardClear" placeholder="Cardiac Cleared"><br>
+          <input type="text" name="allCaseDeath" placeholder="All Case Death"><br>
+          <button>Add 30 Day</button>
+      </form>
+      <br>
+        <button onclick="backFromThirtyDaySect()">Back</button>
+      </section>
+
+      <section id="oneYearSect" hidden="true">
+        <h2>1 year</h2>
+        <form id="addPreIndexForm">
+          <input type="text" name="devFailure" placeholder="Device Failure"><br>
+          <h5>MACCE</h5><br>
+          <input type="text" name="bleeding" placeholder="Bleeding"><br>
+          <input type="text" name="stole" placeholder="Stole"><br>
+          <input type="text" name="cardClear" placeholder="Cardiac Cleared"><br>
+          <input type="text" name="allCaseDeath" placeholder="All Case Death"><br>
+          <button>Add 1 Year</button>
+      </form>
+      <br>
+        <button onclick="backFromOneYearSect()">Back</button>
+      </section>
+
+      <section id="searchDBSect" hidden="true">
+        <h2>Search Database</h2>
+        <button onclick="backFromSearchDBSect()">Back</button>
+      </section>
+
+      <section id="updatePatientSect" hidden="true">
+        <h2>Update Patient</h2>
+        <button onclick="backFromUpdatePatient()">Back</button>
+      </section>
+
+       <!--Login section
+      <section id="whenSignedIn" hidden="true">
+           <div id="userDetails"></div>
+           <div class="content">
+               <form id="addPatientForm">
+                   <input type="text" name="name" placeholder="Patient Name">
+                   <input type="text" name="age" placeholder="Patient Age">
+                   <button>Add Patient</button>
+               </form>
+               <br>
+               <ul id="patientList"></ul>
+          </div>
+          <br>
+          <button id="newPatientBtn">New Patient</button>
+          <button id="signOutBtn">Sign Out</button>
+      </section>
+    -->
+
+    <!--Login section
       <section id="whenSignedIn" hidden="true">
            <div id="userDetails"></div>
            <div class="content">
@@ -66,6 +197,7 @@
           <br>
           <button id="signOutBtn">Sign Out</button>
       </section>
+    -->
 
   </body>
 </html>

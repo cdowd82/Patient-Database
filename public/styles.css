@@ -79,7 +79,7 @@ li div{
 }
 
 form input{
-    float: left;
+    float: vertical;
     width: 38%;
     margin: 0;
     border: 0;

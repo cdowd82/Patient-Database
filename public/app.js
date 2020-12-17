@@ -1,7 +1,6 @@
 console.log(firebase);
 
 /**** Login in / out functionality ***/
-
 const auth = firebase.auth();
 const whenSignedIn = document.getElementById('whenSignedIn');
 const whenSignedOut = document.getElementById('whenSignedOut');
@@ -33,65 +32,109 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-/**** Database functionality ***/
+/*** Sight Navigation ***/
+const newPatientSect = document.getElementById('newPatientSect');
+const preIndexSect = document.getElementById('preIndexSect');
+const indexSect = document.getElementById('indexSect');
+const sevenDaySect = document.getElementById('sevenDaySect');
+const thirtyDaySect = document.getElementById('thirtyDaySect');
+const oneYearSect = document.getElementById('oneYearSect');
+const searchDBSect = document.getElementById('searchDBSect');
+const updatePatientSect = document.getElementById('updatePatientSect');
 
-// NOTE - db variable defined in public/index.html file
-const patients = document.querySelector('#patientList');
-const form = document.querySelector('#addPatientForm');
+// enter new patient section function
+function enterNewPatientSect() {
+    whenSignedIn.hidden = true;
+    newPatientSect.hidden = false;
+};
 
-/** 
- * @brief - creates element and renders patient to DOM
- * @params - doc
- * @ret - none
-*/
-function renderPatient(doc) {
-    // create variables from tags
-    let li = document.createElement('li');
-    let name = document.createElement('span');
-    let age = document.createElement('span');
-    let cross = document.createElement('div');
+// got back to landing page from new patient
+function backFromNewPatientSect() {
+    whenSignedIn.hidden = false;
+    newPatientSect.hidden = true;
 
-    // identify document by id tage in db
-    li.setAttribute('data-id', doc.id);
-    name.textContent = doc.data().name;
-    age.textContent = doc.data().age;
-    cross.textContent = 'delete patient';
+};
 
-    // create list of from doc data
-    li.appendChild(name);
-    li.appendChild(age);
-    li.appendChild(cross);
-    patients.appendChild(li);
+// enter pre-index sect
+function enterPreIndexSect() {
+    newPatientSect.hidden = true;
+    preIndexSect.hidden = false;
+};
 
-    // deleting patient
-    cross.addEventListener('click', (e) => {
-        e.stopPropagation();
-        let id = e.target.parentElement.getAttribute('data-id');
-        db.collection('Patients').doc(id).delete();
-    })
+// back to new patient section from pre index section
+function backFromPreIndex() {
+    newPatientSect.hidden = false;
+    preIndexSect.hidden = true;
 }
 
-// realtime listener 
-db.collection('Patients').orderBy('name').onSnapshot(snapshot => {
-    let changes = snapshot.docChanges();
-    changes.forEach(change => {
-        if (change.type == 'added') {
-            renderPatient(change.doc);
-        } else if (change.type == 'removed') {
-            let li = patientList.querySelector('[data-id=' + change.doc.id + ']');
-            patientList.removeChild(li);
-        }
-    })
-});
+// enter index sect
+function enterIndexSect() {
+    newPatientSect.hidden = true;
+    indexSect.hidden = false;
+};
 
-// save patient
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    db.collection('Patients').add({ 
-        name: form.name.value,
-        age: form.age.value
-     });
-     // reset form fields
-     form.name.value = '';
-     form.age.value = '';
-});
+// back from index sect
+function backFromIndex() {
+    newPatientSect.hidden = false;
+    indexSect.hidden = true;
+}
+
+// enter 7 day sect
+function enterSevenDaySect() {
+    newPatientSect.hidden = true;
+    sevenDaySect.hidden = false;
+};
+
+// back from 7 day sect
+function backFromSevenDaySect() {
+    newPatientSect.hidden = false;
+    sevenDaySect.hidden = true;
+}
+
+// enter 30 day sect
+function enterThirtyDaySect() {
+    newPatientSect.hidden = true;
+    thirtyDaySect.hidden = false;
+};
+
+// back from 30 day sect
+function backFromThirtyDaySect() {
+    newPatientSect.hidden = false;
+    thirtyDaySect.hidden = true;
+}
+
+// enter 1 year sect
+function enterOneYearSect() {
+    newPatientSect.hidden = true;
+    oneYearSect.hidden = false;
+};
+
+// back from 1 year sect
+function backFromOneYearSect() {
+    newPatientSect.hidden = false;
+    oneYearSect.hidden = true;
+}
+
+// enter search DB sect
+function enterSearchDBSect() {
+    whenSignedIn.hidden = true;
+    searchDBSect.hidden = false;
+};
+
+// back from DB sect
+function backFromSearchDBSect() {
+    whenSignedIn.hidden = false;
+    searchDBSect.hidden = true;
+};
+
+// enter update patient sect
+function enterUpdatePatientSect() {
+    whenSignedIn.hidden = true;
+    searchDBSect.hidden = false;
+};
+
+// back from update patient sect
+function backFromUpdatePatientSect() {
+    whenSignedIn.hidden = false;
+    searchDBSect.hidden = true;
+};
