@@ -1,6 +1,7 @@
 console.log(firebase);
 
 /**** Login in / out functionality ***/
+
 const auth = firebase.auth();
 const whenSignedIn = document.getElementById('whenSignedIn');
 const whenSignedOut = document.getElementById('whenSignedOut');
@@ -33,6 +34,7 @@ auth.onAuthStateChanged(user => {
 });
 
 /*** Sight Navigation ***/
+
 const newPatientSect = document.getElementById('newPatientSect');
 const preIndexSect = document.getElementById('preIndexSect');
 const indexSect = document.getElementById('indexSect');
@@ -41,7 +43,9 @@ const thirtyDaySect = document.getElementById('thirtyDaySect');
 const oneYearSect = document.getElementById('oneYearSect');
 const searchDBSect = document.getElementById('searchDBSect');
 const updatePatientSect = document.getElementById('updatePatientSect');
+const deletePatientSect = document.getElementById('deletePatientSect');
 
+// Site navigation funcs //
 // enter new patient section function
 function enterNewPatientSect() {
     whenSignedIn.hidden = true;
@@ -130,11 +134,124 @@ function backFromSearchDBSect() {
 // enter update patient sect
 function enterUpdatePatientSect() {
     whenSignedIn.hidden = true;
-    searchDBSect.hidden = false;
+    updatePatientSect.hidden = false;
 };
 
 // back from update patient sect
 function backFromUpdatePatientSect() {
     whenSignedIn.hidden = false;
-    searchDBSect.hidden = true;
+    updatePatientSect.hidden = true;
 };
+
+// enter delete patient sect
+function enterDeletePatientSect() {
+    whenSignedIn.hidden = true;
+    deletePatientSect.hidden = false;
+};
+
+// back from update patient sect
+function backFromDeletePatientSect() {
+    whenSignedIn.hidden = false;
+    deletePatientSect.hidden = true;
+};
+
+/*** Database **/
+const addPreIndexDataForm = document.querySelector('#addPreIndexForm');
+const patientList = document.querySelector('#patientList');
+
+/** 
+ * @brief - creates element and renders patient to DOM
+ * @params - doc
+ * @ret - none
+*/
+function renderPatient(doc) {
+    // create variables from tags
+    let li = document.createElement('li');
+    let name = document.createElement('span');
+    let dob = document.createElement('span');
+    let cross = document.createElement('div');
+
+    // identify document by id tage in db
+    li.setAttribute('data-id', doc.id);
+    name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
+    dob.textContent = doc.data().dob;
+    cross.textContent = 'delete patient';
+
+    // create list of from doc data
+    li.appendChild(name);
+    li.appendChild(dob);
+    li.appendChild(cross);
+    patientList.appendChild(li);
+
+    // deleting patient
+    cross.addEventListener('click', (e) => {
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        const del = confirm('Confirm delete patient');
+        if (del) {
+            db.collection('Patients').doc(id).delete();
+        } else {
+            // Do not delete
+        }
+    })
+}
+
+// realtime listener 
+db.collection('Patients').onSnapshot(snapshot => {
+    let changes = snapshot.docChanges();
+    changes.forEach(change => {
+        if (change.type == 'added') {
+            renderPatient(change.doc);
+        } else if (change.type == 'removed') {
+            let li = patientList.querySelector('[data-id=' + change.doc.id + ']');
+            patientList.removeChild(li);
+        }
+    })
+});
+
+// notifies user patient has been added
+function addPatientAlert() {
+    const ad = confirm("Confirm add patient");
+    if (ad) {
+       return true;
+    } else {
+        return false;
+    }
+}
+
+// confirm delete patient
+function deletePatientAlert() {
+    confirm("alert");
+}
+
+// enter patient into database
+addPreIndexDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const conf = addPatientAlert();
+    if (conf) {
+    db.collection('Patients').add({ 
+        firstName: addPreIndexDataForm.firstName.value,
+        middleNames: addPreIndexDataForm.middleNames.value,
+        lastName: addPreIndexDataForm.lastName.value,
+        dob: addPreIndexDataForm.dob.value,
+        bloodPressure: addPreIndexDataForm.bloodPressure.value,
+        lvedp: addPreIndexDataForm.lvedp.value,
+        hxStroke: addPreIndexDataForm.hxStroke.value,
+        hf: addPreIndexDataForm.hf.value,
+        mitralReg: addPreIndexDataForm.mitralReg.value,
+     });
+     // reset form fields
+     addPreIndexDataForm.firstName.value = '';
+     addPreIndexDataForm.middleNames.value = '';
+     addPreIndexDataForm.lastName.value = '';
+     addPreIndexDataForm.dob.value = '';
+     addPreIndexDataForm.bloodPressure.value = '';
+     addPreIndexDataForm.lvedp.value = '';
+     addPreIndexDataForm.hxStroke.value = '';
+     addPreIndexDataForm.hf.value = '';
+     addPreIndexDataForm.mitralReg.value = '';
+     backFromNewPatientSect();
+     } else {
+         // Keep fields with active data
+     }
+});

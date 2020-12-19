@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="styles.css">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>PD6 - Patient Database 6</title>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
@@ -35,10 +36,6 @@
 </script>
 
     <script src="app.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"
-            integrity="sha512-/seDHxVfh1NvFUscAj8GsHQVZJvr2jjAoYsNL7As2FCaFHUHYIarl3sRCvVlFgyouVNiRgHIebyLKjpgd1SLDw=="
-            crossorigin="anonymous">
-    </script>
 
 </head>
   <body>
@@ -50,30 +47,52 @@
           <button id="signInBtn">Sign in with Google</button>
       </section>
 
+    <!--Logged in section landing page-->
       <section id="whenSignedIn" hidden="true">
           <h1>PD6 - Patient Database 6</h1>
           <div id="userDetails"></div>
           <button onclick="enterNewPatientSect()">New Patient</button>
-          <button onclick="enterSearchDBSect()">Search Patient Database</button>
+          <button onclick="enterSearchDBSect()">Search Patient</button>
           <button onclick="enterUpdatePatientSect()">Update Patient</button>
+          <button onclick="enterDeletePatientSect()">Delete Patient</button>
+          <br></br>
+          <ul id="patientList"></ul>
           <br></br>
           <button id="signOutBtn">Sign Out</button>
       </section>
 
+    <!--Button accessed sections-->
       <section id="newPatientSect" hidden="true">
         <h2>New Patient</h2>
+        <h3>Pre-Index</h3>
+            <form id="addPreIndexForm">
+                <input type="text" name="firstName" placeholder="First Name"><br>
+                <input type="text" name="middleNames" placeholder="Middle Names"><br>
+                <input type="text" name="lastName" placeholder="Last Name"><br>
+                <input type="date" name="dob" placeholder="DOB - MM-DD-YYYY"><br>
+                <input type="text" name="bloodPressure" placeholder="Blood Pressure"><br>
+                <input type="text" name="lvedp" placeholder="LVEDP"><br>
+                <input type="text" name="hxStroke" placeholder="Hx Stroke"><br>
+                <input type="text" name="hf" placeholder="HF"><br>
+                <input type="text" name="mitralReg" placeholder="Mitral Regulation"><br></br>
+                <button>Add Patient</button><br></br>
+            </form>
+            <button onclick="backFromNewPatientSect()">Back</button>
+        <!--
         <button onclick="enterPreIndexSect()">Pre-Index</button>
         <button onclick="enterIndexSect()">Index</button>
         <button onclick="enterSevenDaySect()">7 Day</button>
         <button onclick="enterThirtyDaySect()">30 Day</button>
         <button onclick="enterOneYearSect()">1 Year</button>
-        <button onclick="enterUpdatePatientSect()">Update Patient</button>
         <button onclick="backFromNewPatientSect()">Back</button>
+        -->
       </section>
-
+      
+      <!--Forms for entry-->
       <section id="preIndexSect" hidden="true">
-          <h2>Pre-Index</h2>
+        <!--
           <form id="addPreIndexForm">
+            <h3>Pre-Index</h3>
             <input type="text" name="name" placeholder="Name"><br>
             <input type="text" name="age" placeholder="Age"><br>
             <input type="text" name="bloodPressure" placeholder="Blood Pressure"><br>
@@ -81,8 +100,19 @@
             <input type="text" name="hxStroke" placeholder="Hx Stroke"><br>
             <input type="text" name="hf" placeholder="HF"><br>
             <input type="text" name="mitralReg" placeholder="Mitral Regulation"><br>
-            <button>Add Pre-index</button>
+            <h3>Index</h3>
+            <input type="text" name="minOfProcedure" placeholder="Minutes of Procedure"><br>
+            <input type="text" name="pci" placeholder="+/- PCI"><br>
+            <input type="text" name="xRayDose" placeholder="X-Ray Dose (ms)"><br>
+            <input type="text" name="contrastVol" placeholder="Contrast Volume (mL)"><br>
+            <input type="text" name="lvedp" placeholder="LVEDP"><br>
+            <input type="text" name="regulatedVol" placeholder="Regulated Volume"><br>
+            <input type="text" name="procedureBleeding" placeholder="Procedure Bleeding"><br>
+            <input type="text" name="devFailure" placeholder="Device Failure"><br>
+            <input type="text" name="valveAndSize" placeholder="Valve and Size"><br>
+            <button>Add Patient</button>
         </form>
+        -->
           <br>
           <button onclick="backFromPreIndex()">Back</button>
       </section>
@@ -161,7 +191,12 @@
 
       <section id="updatePatientSect" hidden="true">
         <h2>Update Patient</h2>
-        <button onclick="backFromUpdatePatient()">Back</button>
+        <button onclick="backFromUpdatePatientSect()">Back</button>
+      </section>
+
+      <section id="deletePatientSect" hidden="true">
+        <h2>Delete Patient</h2>
+        <button onclick="backFromDeletePatientSect()">Back</button>
       </section>
 
        <!--Login section
