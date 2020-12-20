@@ -46,6 +46,7 @@ const updatePatientSect = document.getElementById('updatePatientSect');
 const deletePatientSect = document.getElementById('deletePatientSect');
 
 // Site navigation funcs //
+
 // enter new patient section function
 function enterNewPatientSect() {
     whenSignedIn.hidden = true;
@@ -156,8 +157,11 @@ function backFromDeletePatientSect() {
 };
 
 /*** Database **/
+
 const addPreIndexDataForm = document.querySelector('#addPreIndexForm');
 const patientList = document.querySelector('#patientList');
+const patientSearchList = document.querySelector('#patientSearchList');
+const searchForm = document.querySelector('#searchForm');
 
 /** 
  * @brief - creates element and renders patient to DOM
@@ -182,6 +186,43 @@ function renderPatient(doc) {
     li.appendChild(dob);
     li.appendChild(cross);
     patientList.appendChild(li);
+
+    // deleting patient
+    cross.addEventListener('click', (e) => {
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        const del = confirm('Confirm delete patient');
+        if (del) {
+            db.collection('Patients').doc(id).delete();
+        } else {
+            // Do not delete
+        }
+    })
+}
+
+/** 
+ * @brief - creates element and renders patient to DOM
+ * @params - doc
+ * @ret - none
+*/
+function renderSearchPatient(doc) {
+    // create variables from tags
+    let li = document.createElement('li');
+    let name = document.createElement('span');
+    let dob = document.createElement('span');
+    let cross = document.createElement('div');
+
+    // identify document by id tage in db
+    li.setAttribute('data-id', doc.id);
+    name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
+    dob.textContent = doc.data().dob;
+    cross.textContent = 'delete patient';
+
+    // create list of from doc data
+    li.appendChild(name);
+    li.appendChild(dob);
+    li.appendChild(cross);
+    patientSearchList.appendChild(li);
 
     // deleting patient
     cross.addEventListener('click', (e) => {
@@ -252,6 +293,42 @@ addPreIndexDataForm.addEventListener('submit', (e) => {
      addPreIndexDataForm.mitralReg.value = '';
      backFromNewPatientSect();
      } else {
-         // Keep fields with active data
+         // Keep fields with active data. Add no data to patient DB.
      }
+});
+
+// Seach database for id of document with names first last
+searchForm.addEventListener('submit', (e) => {
+    e.preventDefault(); 
+    const patientName = searchForm.searchName.value
+    console.log(patientName);
+    /*const patientLastName = */ 
+    db.collection('Patients')/*.where('firstName', '==', 'patientName')
+        */.get().then(function(querySnapshot) {
+            querySnapshot.forEach(function(doc) {
+                const fName = doc.data().firstName
+                if(patientName == fName) {
+                        // create variables from tags
+    let li = document.createElement('li');
+    let name = document.createElement('span');
+    let dob = document.createElement('span');
+    let cross = document.createElement('div');
+
+    // identify document by id tage in db
+    li.setAttribute('data-id', doc.id);
+    name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
+    dob.textContent = doc.data().dob;
+    cross.textContent = 'delete patient';
+
+    // create list of from doc data
+    li.appendChild(name);
+    li.appendChild(dob);
+    li.appendChild(cross);
+    patientSearchList.appendChild(li);
+                    console.log(fName);
+                } else {
+                    // Don't print to terminal
+                }
+            });
+    });
 });
