@@ -205,36 +205,21 @@ function renderPatient(doc) {
  * @params - doc
  * @ret - none
 */
-function renderSearchPatient(doc) {
+function renderSearchedPatient(doc) {
     // create variables from tags
     let li = document.createElement('li');
     let name = document.createElement('span');
     let dob = document.createElement('span');
-    let cross = document.createElement('div');
 
     // identify document by id tage in db
     li.setAttribute('data-id', doc.id);
     name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
     dob.textContent = doc.data().dob;
-    cross.textContent = 'delete patient';
 
     // create list of from doc data
     li.appendChild(name);
     li.appendChild(dob);
-    li.appendChild(cross);
     patientSearchList.appendChild(li);
-
-    // deleting patient
-    cross.addEventListener('click', (e) => {
-        e.stopPropagation();
-        let id = e.target.parentElement.getAttribute('data-id');
-        const del = confirm('Confirm delete patient');
-        if (del) {
-            db.collection('Patients').doc(id).delete();
-        } else {
-            // Do not delete
-        }
-    })
 }
 
 // realtime listener 
@@ -302,33 +287,45 @@ searchForm.addEventListener('submit', (e) => {
     e.preventDefault(); 
     const patientName = searchForm.searchName.value
     console.log(patientName);
-    /*const patientLastName = */ 
-    db.collection('Patients')/*.where('firstName', '==', 'patientName')
-        */.get().then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                const fName = doc.data().firstName
-                if(patientName == fName) {
-                        // create variables from tags
-    let li = document.createElement('li');
-    let name = document.createElement('span');
-    let dob = document.createElement('span');
-    let cross = document.createElement('div');
 
-    // identify document by id tage in db
-    li.setAttribute('data-id', doc.id);
-    name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
-    dob.textContent = doc.data().dob;
-    cross.textContent = 'delete patient';
+    db.collection('Patients').get().then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+            const fName = doc.data().firstName;
+            const lName = doc.data().lastName;
+            const fullName = fName + ' ' + lName;
 
-    // create list of from doc data
-    li.appendChild(name);
-    li.appendChild(dob);
-    li.appendChild(cross);
-    patientSearchList.appendChild(li);
-                    console.log(fName);
-                } else {
-                    // Don't print to terminal
-                }
-            });
+            if(patientName == fullName) {
+                console.log(fullName);
+                // create variables from tags
+                let li = document.createElement('li');
+                let name = document.createElement('span');
+                let dob = document.createElement('span');
+                let select = document.createElement('div');
+
+                // identify document by id tage in db
+                li.setAttribute('data-id', doc.id);
+                name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
+                dob.textContent = doc.data().dob;
+                select.textContent = 'Select';
+
+                // create list of from doc data
+                li.appendChild(name);
+                li.appendChild(dob);
+                li.appendChild(select);
+                patientSearchList.appendChild(li);
+
+                select.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    console.log('Select');
+                    console.log(doc);
+                });
+            } else {
+                // Don't print to terminal
+            }
+        });
     });
 });
+
+function clearPatientSearch() {
+    patientSearchList.innerHTML = '';
+};
