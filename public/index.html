@@ -53,8 +53,10 @@
           <div id="userDetails"></div>
           <button onclick="enterNewPatientSect()">New Patient</button>
           <button onclick="enterSearchDBSect()">Search Patient</button>
+          <!--
           <button onclick="enterUpdatePatientSect()">Update Patient</button>
           <button onclick="enterDeletePatientSect()">Delete Patient</button>
+          -->
           <br></br>
           <ul id="patientList"></ul>
           <br></br>
@@ -77,44 +79,7 @@
                 <input type="text" name="mitralReg" placeholder="Mitral Regulation"><br></br>
                 <button>Add Patient</button><br></br>
             </form>
-            <button onclick="backFromNewPatientSect()">Back</button>
-        <!--
-        <button onclick="enterPreIndexSect()">Pre-Index</button>
-        <button onclick="enterIndexSect()">Index</button>
-        <button onclick="enterSevenDaySect()">7 Day</button>
-        <button onclick="enterThirtyDaySect()">30 Day</button>
-        <button onclick="enterOneYearSect()">1 Year</button>
-        <button onclick="backFromNewPatientSect()">Back</button>
-        -->
-      </section>
-      
-      <!--Forms for entry-->
-      <section id="preIndexSect" hidden="true">
-        <!--
-          <form id="addPreIndexForm">
-            <h3>Pre-Index</h3>
-            <input type="text" name="name" placeholder="Name"><br>
-            <input type="text" name="age" placeholder="Age"><br>
-            <input type="text" name="bloodPressure" placeholder="Blood Pressure"><br>
-            <input type="text" name="lvedp" placeholder="LVEDP"><br>
-            <input type="text" name="hxStroke" placeholder="Hx Stroke"><br>
-            <input type="text" name="hf" placeholder="HF"><br>
-            <input type="text" name="mitralReg" placeholder="Mitral Regulation"><br>
-            <h3>Index</h3>
-            <input type="text" name="minOfProcedure" placeholder="Minutes of Procedure"><br>
-            <input type="text" name="pci" placeholder="+/- PCI"><br>
-            <input type="text" name="xRayDose" placeholder="X-Ray Dose (ms)"><br>
-            <input type="text" name="contrastVol" placeholder="Contrast Volume (mL)"><br>
-            <input type="text" name="lvedp" placeholder="LVEDP"><br>
-            <input type="text" name="regulatedVol" placeholder="Regulated Volume"><br>
-            <input type="text" name="procedureBleeding" placeholder="Procedure Bleeding"><br>
-            <input type="text" name="devFailure" placeholder="Device Failure"><br>
-            <input type="text" name="valveAndSize" placeholder="Valve and Size"><br>
-            <button>Add Patient</button>
-        </form>
-        -->
-          <br>
-          <button onclick="backFromPreIndex()">Back</button>
+        <button onclick="backFromNewPatientSect()">Back to Main</button>
       </section>
 
       <section id="indexSect" hidden="true">
@@ -186,7 +151,6 @@
 
       <section id="searchDBSect" hidden="true">
         <h2>Search Database</h2>
-        <!--WORK FROM HERE-->
         <form id="searchForm">
             <label for="search">Search: </label><br></b>
             <input type="text" name="searchName" placeholder="First and last name"><br></br>        
@@ -194,64 +158,73 @@
         </form>
         <br>
         <ul id="patientSearchList"></ul>
-        <br>
+        <br></br>
         <button onclick="clearPatientSearch()">Clear Search</button>
         <br></br>
-        <button onclick="backFromSearchDBSect()">Back</button><br>
+        <button onclick="backFromSearchDBSect()">Back to Main</button><br>
       </section>
 
+      <section id="selectedSearchedPatient" hidden="true">
+        <h2>Selected Patient Data</h2>
+        <br>
+        <ul id="selectedPatientList"></ul>
+        </br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <!--Update Patient From Selected Patient - Start-->
+        <section id="updatePatientSect" hidden="true">
+          <h2>Update Patient</h2>
+          <br>
+          <button onclick="enterUpdateIndexSect()">Update Index</button>
+          <br>
+          <section id="updateIndexSect" hidden="true">
+              <h4>Update Index:</h4>
+              <form id="addIndexForm">
+                <input type="text" name="minOfProcedure" placeholder="Minutes of Procedure"><br>
+                <input type="text" name="pci" placeholder="+/- PCI"><br>
+                <input type="text" name="xRayDose" placeholder="X-Ray Dose (ms)"><br>
+                <input type="text" name="contrastVol" placeholder="Contrast Volume (mL)"><br>
+                <input type="text" name="lvedp" placeholder="LVEDP"><br>
+                <input type="text" name="regulatedVol" placeholder="Regulated Volume"><br>
+                <input type="text" name="procedureBleeding" placeholder="Procedure Bleeding"><br>
+                <input type="text" name="devFailure" placeholder="Device Failure"><br>
+                <input type="text" name="valveAndSize" placeholder="Valve and Size"><br>
+                <button>Add Index</button>
+            </form>
+              <br>
+              <button onclick="backFromIndex()">Close Add Index</button>
+          </section>
+          <br>
+          <button>Update 7 Day</button>
+          <br></br>
+          <button>Update 30 Day</button>
+          <br></br>
+          <button>Update 1 Year</button>
+          <br></br>
+          <button onclick="backFromUpdatePatientSect()">Back To Main</button>
+          <br></br>
+          <button id="backFromUpdateBtn">Back to Selected Patient</button>
+        </section>
+        <!--Update Patient From Selected Patient - Finish-->
+        <br>
+        <button onclick="backFromSelectedPatient()">Back to Search</button>
+      </section>
+
+      <!--
       <section id="updatePatientSect" hidden="true">
         <h2>Update Patient</h2>
-        <form id="searchForm">
-          <label for="search">Search: </label><br></b>
-          <input type="text" name="searchName" placeholder="First and last name"><br></br>        
-          <button>Search</button><br>
-        </form>
         <br>
-        <ul id="patientSearchList" hidden="false"></ul>
-        <br>
-        <button onclick="backFromUpdatePatientSect()">Back</button>
+        <button onclick="backFromUpdatePatientSect()">Back To Main</button>
+        <br></br>
+        <button id="backFromUpdateBtn">Back to Selected Patient</button>
       </section>
+      -->
 
       <section id="deletePatientSect" hidden="true">
         <h2>Delete Patient</h2>
         <button onclick="backFromDeletePatientSect()">Back</button>
       </section>
-
-       <!--Login section
-      <section id="whenSignedIn" hidden="true">
-           <div id="userDetails"></div>
-           <div class="content">
-               <form id="addPatientForm">
-                   <input type="text" name="name" placeholder="Patient Name">
-                   <input type="text" name="age" placeholder="Patient Age">
-                   <button>Add Patient</button>
-               </form>
-               <br>
-               <ul id="patientList"></ul>
-          </div>
-          <br>
-          <button id="newPatientBtn">New Patient</button>
-          <button id="signOutBtn">Sign Out</button>
-      </section>
-    -->
-
-    <!--Login section
-      <section id="whenSignedIn" hidden="true">
-           <div id="userDetails"></div>
-           <div class="content">
-               <form id="addPatientForm">
-                   <input type="text" name="name" placeholder="Patient Name">
-                   <input type="text" name="age" placeholder="Patient Age">
-                   <button>Add Patient</button>
-               </form>
-               <br>
-               <ul id="patientList"></ul>
-          </div>
-          <br>
-          <button id="signOutBtn">Sign Out</button>
-      </section>
-    -->
 
   </body>
 </html>

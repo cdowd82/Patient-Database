@@ -44,6 +44,8 @@ const oneYearSect = document.getElementById('oneYearSect');
 const searchDBSect = document.getElementById('searchDBSect');
 const updatePatientSect = document.getElementById('updatePatientSect');
 const deletePatientSect = document.getElementById('deletePatientSect');
+const selectedSearchedPatient = document.getElementById('selectedSearchedPatient');
+const updateIndexSect = document.getElementById('updateIndexSect');
 
 // Site navigation funcs //
 
@@ -80,8 +82,7 @@ function enterIndexSect() {
 
 // back from index sect
 function backFromIndex() {
-    newPatientSect.hidden = false;
-    indexSect.hidden = true;
+    updateIndexSect.hidden = true;
 }
 
 // enter 7 day sect
@@ -142,6 +143,8 @@ function enterUpdatePatientSect() {
 function backFromUpdatePatientSect() {
     whenSignedIn.hidden = false;
     updatePatientSect.hidden = true;
+    selectedSearchedPatient.hidden = true;
+    clearSelectedPatient();
 };
 
 // enter delete patient sect
@@ -156,12 +159,46 @@ function backFromDeletePatientSect() {
     deletePatientSect.hidden = true;
 };
 
+// enter selected patient in search patitient
+function enterSelectedPatient() {
+    searchDBSect.hidden = true;
+    selectedSearchedPatient.hidden = false;
+}
+
+// back from selected patient in search patitient
+function backFromSelectedPatient() {
+    searchDBSect.hidden = false;
+    selectedSearchedPatient.hidden = true;
+    clearSelectedPatient();
+}
+
+// enter selected patient in search patitient
+function enterUpdatePatientFromSelectedPatient() {
+    //selectedSearchedPatient.hidden = true;
+    updatePatientSect.hidden = false;
+}
+
+// back from selected patient in search patitient
+function backUpdatePatientFromSelectedPatient() {
+    //selectedSearchedPatient.hidden = false;
+    updatePatientSect.hidden = true;
+}
+
+// show update index section
+function enterUpdateIndexSect() {
+    updateIndexSect.hidden = false;
+}
+
 /*** Database **/
 
 const addPreIndexDataForm = document.querySelector('#addPreIndexForm');
 const patientList = document.querySelector('#patientList');
 const patientSearchList = document.querySelector('#patientSearchList');
 const searchForm = document.querySelector('#searchForm');
+const selectedPatientList = document.querySelector('#selectedPatientList');
+const backFromUpdateBtn = document.getElementById('backFromUpdateBtn');
+const addIndexForm = document.querySelector('#addIndexForm');
+let globalDocId = 0; // Zero when no assigned
 
 /** 
  * @brief - creates element and renders patient to DOM
@@ -173,6 +210,8 @@ function renderPatient(doc) {
     let li = document.createElement('li');
     let name = document.createElement('span');
     let dob = document.createElement('span');
+    let preIndexAdded = document.createElement('span');
+    let indexAdded = document.createElement('span');
     let cross = document.createElement('div');
 
     // identify document by id tage in db
@@ -184,6 +223,14 @@ function renderPatient(doc) {
     // create list of from doc data
     li.appendChild(name);
     li.appendChild(dob);
+    if (doc.data().preIndexAdded == 'Y') {
+        preIndexAdded.textContent = 'PI: ' + doc.data().preIndexAdded;
+        li.appendChild(preIndexAdded);
+    }
+    if (doc.data().indexAdded == 'Y') {
+        indexAdded.textContent = 'I: ' + doc.data().indexAdded;
+        li.appendChild(indexAdded);
+    }
     li.appendChild(cross);
     patientList.appendChild(li);
 
@@ -222,6 +269,63 @@ function renderSearchedPatient(doc) {
     patientSearchList.appendChild(li);
 }
 
+/** 
+ * @brief - creates element and renders patient to DOM
+ * @params - doc
+ * @ret - none
+*/
+function renderSelectedPatient(doc) {
+
+    // assign document id to global for parsing around. 
+    globalDocId = doc.id;
+
+    // create variables from tags
+    let li = document.createElement('li');
+    let name = document.createElement('span');
+    let dob = document.createElement('span');
+    let bloodPressure = document.createElement('span');
+    let preIndex = document.createElement('span');
+    let lvedp = document.createElement('span');
+    let hxStroke = document.createElement('span');
+    let hf = document.createElement('span');
+    let mitralReg = document.createElement('span');
+    let updatePatient = document.createElement('div');
+    let index = document.createElement('span');
+
+    // identify document by id tag in db
+    li.setAttribute('data-id', doc.id);
+    preIndex.textContent = "PRE-INDEX";
+    name.textContent = 'Name: ' + doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
+    dob.textContent = 'DOB: ' + doc.data().dob;
+    bloodPressure.textContent = "Blood Pressure: " + doc.data().bloodPressure;
+    lvedp.textContent = 'LVEDP: '+ doc.data().lvedp;
+    hxStroke.textContent = 'Hx Stroke: ' + doc.data().hxStroke;
+    hf.textContent = 'HF: ' + doc.data().hf;
+    mitralReg.textContent = 'Mitral Regulation: ' + doc.data().mitralReg;
+    updatePatient.textContent = 'Update Patient';
+
+    index.textContent = "INDEX";
+
+    // create list of from doc data
+    li.appendChild(preIndex);
+    li.appendChild(name);
+    li.appendChild(dob);
+    li.appendChild(bloodPressure);
+    li.appendChild(lvedp);
+    li.appendChild(hxStroke);
+    li.appendChild(hf);
+    li.appendChild(mitralReg);
+    li.appendChild(updatePatient);
+    li.appendChild(index);
+    selectedPatientList.appendChild(li);
+
+    updatePatient.addEventListener('click', (e) => {
+        e.stopPropagation();
+        let id = e.target.parentElement.getAttribute('data-id');
+        enterUpdatePatientFromSelectedPatient();
+    })
+}
+
 // realtime listener 
 db.collection('Patients').onSnapshot(snapshot => {
     let changes = snapshot.docChanges();
@@ -245,6 +349,16 @@ function addPatientAlert() {
     }
 }
 
+// notifies user patient index has been added
+function addPatientIndexAlert() {
+    const ad = confirm("Confirm add patient index");
+    if (ad) {
+       return true;
+    } else {
+        return false;
+    }
+}
+
 // confirm delete patient
 function deletePatientAlert() {
     confirm("alert");
@@ -252,41 +366,42 @@ function deletePatientAlert() {
 
 // enter patient into database
 addPreIndexDataForm.addEventListener('submit', (e) => {
+    let y = 'Y'
     e.preventDefault();
-    const conf = addPatientAlert();
+    let conf = addPatientAlert();
     if (conf) {
-    db.collection('Patients').add({ 
-        firstName: addPreIndexDataForm.firstName.value,
-        middleNames: addPreIndexDataForm.middleNames.value,
-        lastName: addPreIndexDataForm.lastName.value,
-        dob: addPreIndexDataForm.dob.value,
-        bloodPressure: addPreIndexDataForm.bloodPressure.value,
-        lvedp: addPreIndexDataForm.lvedp.value,
-        hxStroke: addPreIndexDataForm.hxStroke.value,
-        hf: addPreIndexDataForm.hf.value,
-        mitralReg: addPreIndexDataForm.mitralReg.value,
-     });
-     // reset form fields
-     addPreIndexDataForm.firstName.value = '';
-     addPreIndexDataForm.middleNames.value = '';
-     addPreIndexDataForm.lastName.value = '';
-     addPreIndexDataForm.dob.value = '';
-     addPreIndexDataForm.bloodPressure.value = '';
-     addPreIndexDataForm.lvedp.value = '';
-     addPreIndexDataForm.hxStroke.value = '';
-     addPreIndexDataForm.hf.value = '';
-     addPreIndexDataForm.mitralReg.value = '';
-     backFromNewPatientSect();
-     } else {
+        db.collection('Patients').add({ 
+            firstName: addPreIndexDataForm.firstName.value,
+            middleNames: addPreIndexDataForm.middleNames.value,
+            lastName: addPreIndexDataForm.lastName.value,
+            dob: addPreIndexDataForm.dob.value,
+            bloodPressure: addPreIndexDataForm.bloodPressure.value,
+            lvedp: addPreIndexDataForm.lvedp.value,
+            hxStroke: addPreIndexDataForm.hxStroke.value,
+            hf: addPreIndexDataForm.hf.value,
+            mitralReg: addPreIndexDataForm.mitralReg.value,
+            preIndexAdded: y
+        });
+        // reset form fields
+        addPreIndexDataForm.firstName.value = '';
+        addPreIndexDataForm.middleNames.value = '';
+        addPreIndexDataForm.lastName.value = '';
+        addPreIndexDataForm.dob.value = '';
+        addPreIndexDataForm.bloodPressure.value = '';
+        addPreIndexDataForm.lvedp.value = '';
+        addPreIndexDataForm.hxStroke.value = '';
+        addPreIndexDataForm.hf.value = '';
+        addPreIndexDataForm.mitralReg.value = '';
+        backFromNewPatientSect();
+    } else {
          // Keep fields with active data. Add no data to patient DB.
-     }
+    }
 });
 
 // Seach database for id of document with names first last
 searchForm.addEventListener('submit', (e) => {
     e.preventDefault(); 
     const patientName = searchForm.searchName.value
-    console.log(patientName);
 
     db.collection('Patients').get().then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
@@ -294,14 +409,13 @@ searchForm.addEventListener('submit', (e) => {
             const lName = doc.data().lastName;
             const fullName = fName + ' ' + lName;
 
-            if(patientName == fullName) {
-                console.log(fullName);
+            if (patientName == fullName) {
                 // create variables from tags
                 let li = document.createElement('li');
                 let name = document.createElement('span');
                 let dob = document.createElement('span');
                 let select = document.createElement('div');
-
+            
                 // identify document by id tage in db
                 li.setAttribute('data-id', doc.id);
                 name.textContent = doc.data().firstName + ' ' + doc.data().middleNames + ' ' + doc.data().lastName;
@@ -316,16 +430,63 @@ searchForm.addEventListener('submit', (e) => {
 
                 select.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    console.log('Select');
-                    console.log(doc);
+                    enterSelectedPatient();
+                    renderSelectedPatient(doc);
+                    console.log(doc.data().firstName);
                 });
             } else {
-                // Don't print to terminal
+                // Don't render patient to search list
             }
         });
     });
 });
 
+// clears patient search list
 function clearPatientSearch() {
     patientSearchList.innerHTML = '';
 };
+
+// clears selected patient list
+function clearSelectedPatient() {
+    selectedPatientList.innerHTML = '';
+};
+
+backFromUpdateBtn.addEventListener('click', (e) => {
+    backUpdatePatientFromSelectedPatient();
+});
+
+// update index patient doc in database
+addIndexForm.addEventListener('submit', (e) => {
+    let y = 'Y';
+    e.preventDefault();
+    let conf = addPatientIndexAlert();
+    if (conf) {
+    //let id = db.collection('Patients').doc.doc(id);
+    console.log(globalDocId);
+    db.collection('Patients').doc(globalDocId).set({ 
+        minuestOfProcedure: addIndexForm.minOfProcedure.value,
+        pci: addIndexForm.pci.value,
+        xRayDose: addIndexForm.xRayDose.value,
+        contrastVolume: addIndexForm.constrastVolume,
+        ilvedp: addIndexForm.ilvedp,
+        regulatedVolume: addIndexForm.regulatedVolume,
+        prodecureBleeding: addIndexForm.prodecureBleeding,
+        deviceFailure: addIndexForm.deviceFailure,
+        valveAndSize: addIndexForm.valveAndSize,
+        indexAdded: y
+     }, { merge: true });
+     // reset form fields
+     addIndexForm.minOfProcedure.value = '';
+     addIndexForm.pci.value = '';
+     addIndexForm.xRayDose.value = '';
+     addIndexForm.constrastVolume = '';
+     addIndexForm.ilvedp = '';
+     addIndexForm.regulatedVolume = '';
+     addIndexForm.prodecureBleeding = '';
+     addIndexForm.deviceFailure = '';
+     addIndexForm.valveAndSize = '';
+     //backFromNewPatientSect();
+     } else {
+         // Keep fields with active data. Add no data to patient DB.
+     }
+});
